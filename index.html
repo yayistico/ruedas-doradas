@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a150f">
+<title>Ruedas Doradas · Pagos</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ruedas Doradas">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!--
+  RUEDAS DORADAS — Página de acceso (GitHub Pages) · v1.0 · 2026-11-13
+  Carga la app de Apps Script dentro de esta página para poder instalarla como ícono en el teléfono.
+  Para cambiar X, edita solo Y:
+   · Enlace de la app de Apps Script ........ la constante APP_URL (más abajo)
+   · Nombre, colores o ícono ................. manifest.webmanifest y la carpeta icons/
+  NO guarda datos ni claves: todo se procesa en la app de Apps Script.
+-->
+<style>
+  html,body{margin:0;height:100%;background:#1a150f;color:#f2efe6;font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  #marco{position:fixed;inset:0;width:100%;height:100%;border:0;background:#1a150f}
+  .msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;flex-direction:column;gap:12px}
+  .msg img{width:96px;height:96px;border-radius:50%}
+  .msg a{color:#b3be2a}
+  #cargando{display:flex}
+  .oculto{display:none!important}
+</style>
+</head>
+<body>
+<!-- === ZONA EDITABLE: pega aquí el enlace de la app (el que termina en /exec) === -->
+<script>var APP_URL = 'PEGA_AQUI_EL_ENLACE_QUE_TERMINA_EN_/exec';</script>
+<!-- === FIN ZONA EDITABLE === -->
+
+<div class="msg" id="cargando"><img src="icons/icon-192.png" alt=""><div>Abriendo Ruedas Doradas…</div></div>
+<div class="msg" id="aviso"><img src="icons/icon-192.png" alt=""><div id="avisoTxt"></div></div>
+<iframe id="marco" title="Ruedas Doradas · Pagos" class="oculto" allow="clipboard-write; camera" referrerpolicy="no-referrer"></iframe>
+
+<script>
+(function () {
+  var marco = document.getElementById('marco'), cargando = document.getElementById('cargando'), aviso = document.getElementById('aviso'), txt = document.getElementById('avisoTxt');
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function () {}); }
+  function mostrarAviso(html) { cargando.style.display = 'none'; marco.classList.add('oculto'); aviso.style.display = 'flex'; txt.innerHTML = html; }
+  var valida = /^https:\/\/script\.google\.com\/(a\/macros\/[^\/]+\/|macros\/)s\/[A-Za-z0-9_-]+\/exec$/.test(String(APP_URL).trim());
+  if (!valida) { mostrarAviso('Falta configurar el enlace de la app.<br>Abre <b>index.html</b> y pega el enlace que termina en <b>/exec</b> en <b>APP_URL</b>.'); return; }
+  var url = String(APP_URL).trim();
+  var enlaceDirecto = 'Si no abre, <a href="' + url + '" target="_blank" rel="noopener">ábrela directo aquí</a>.';
+  var listo = false;
+  marco.addEventListener('load', function () { listo = true; cargando.style.display = 'none'; marco.classList.remove('oculto'); });
+  marco.src = url;
+  setTimeout(function () { if (!listo) mostrarAviso('Está tardando más de lo normal.<br>' + enlaceDirecto); }, 20000);
+})();
+</script>
+</body>
+</html>
